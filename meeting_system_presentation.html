@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عرض تقديمي: نظام إدارة الاجتماعات والمجالس - Oracle APEX</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --bg-main: #0f172a;
+            --card-bg: #1e293b;
+            --accent-blue: #38bdf8;
+            --accent-teal: #2dd4bf;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* شريحة العرض */
+        .slide-container {
+            width: 85vw;
+            max-width: 1100px;
+            height: 75vh;
+            max-height: 650px;
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            padding: 50px 60px;
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        .slide-container.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* الهيدر والفلوتر للشريحة */
+        .slide-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+
+        .slide-title {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--accent-blue);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .slide-number {
+            font-size: 14px;
+            color: var(--text-muted);
+            background: var(--bg-main);
+            padding: 4px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        .slide-body {
+            flex: 1;
+            margin-top: 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* أنماط الشريحة الأولى (الغلاف) */
+        .cover-slide {
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .cover-slide h1 {
+            font-size: 38px;
+            font-weight: 800;
+            color: #ffffff;
+            line-height: 1.3;
+        }
+
+        .cover-slide h2 {
+            font-size: 20px;
+            color: var(--accent-teal);
+            font-weight: 500;
+        }
+
+        .cover-meta {
+            margin-top: 30px;
+            font-size: 15px;
+            color: var(--text-muted);
+            display: flex;
+            gap: 25px;
+        }
+
+        /* شبكة الكروت التوضيحية داخل الشرائح */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .cards-grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .card-item {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        .card-item i {
+            font-size: 24px;
+            color: var(--accent-teal);
+            margin-bottom: 10px;
+        }
+
+        .card-item h3 {
+            font-size: 18px;
+            color: var(--accent-blue);
+            margin-bottom: 8px;
+        }
+
+        .card-item p {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .bullet-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .bullet-list li {
+            font-size: 17px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(15, 23, 42, 0.4);
+            padding: 12px 18px;
+            border-radius: 8px;
+            border-right: 4px solid var(--accent-teal);
+        }
+
+        /* أزرار التحكم بالنقل */
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+            align-items: center;
+        }
+
+        .btn-nav {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 10px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            font-family: 'Tajawal', sans-serif;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .btn-nav:hover {
+            background-color: var(--accent-blue);
+            color: #000000;
+            border-color: var(--accent-blue);
+        }
+
+        .progress-bar {
+            width: 200px;
+            height: 6px;
+            background: var(--border-color);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--accent-teal);
+            width: 10%;
+            transition: width 0.3s;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- الشريحة 1: الغلاف -->
+    <div class="slide-container active cover-slide">
+        <i class="fa-solid fa-users-gear" style="font-size: 55px; color: var(--accent-teal);"></i>
+        <h1>نظام إدارة وحوكمة الاجتماعات والمجالس</h1>
+        <h2>حل تقني شامل ومُحكم أُعدّ باستخدام Oracle APEX & PL/SQL</h2>
+        <div class="cover-meta">
+            <span><i class="fa-solid fa-code-branch"></i> إعداد وتطوير: م. ناجي أحمد أبو مغصيب</span>
+            <span><i class="fa-solid fa-database"></i> Oracle Database 11g & APEX 19.2</span>
+        </div>
+    </div>
+
+    <!-- الشريحة 2: الهدف الاستراتيجي -->
+    <div class="slide-container">
+        <div class="slide-header">
+            <div class="slide-title"><i class="fa-solid fa-bullseye"></i> الهدف والرؤية العامة للنظام</div>
+            <div class="slide-number">2 / 8</div>
+        </div>
+        <div class="slide-body">
+            <div class="cards-grid">
+                <div class="card-item">
+                    <i class="fa-solid fa-sitemap"></i>
+                    <h3>إدارة الشؤون التنظيمية</h3>
+                    <p>إدارة جلسات اللجان، مجالس الكليات، الأقسام، والدوائر الإدارية بتسلسل إداري موحد.</p>
+                </div>
+                <div class="card-item">
+                    <i class="fa-solid fa-box-archive"></i>
+                    <h3>الأرشفة الرقمية الشاملة</h3>
+                    <p>أرشفة وتوثيق المحاضر، القرارات، والتوصيات وسهولة الرجوع إليها في أي وقت.</p>
+                </div>
+                <div class="card-item">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <h3>متابعة الإنجاز والقرارات</h3>
+                    <p>ربط القرارات بمواعيد نهائية (Dead Dates) ومتابعة تنفيذ التوصيات بدقة عالية.</p>
+                </div>
+                <div class="card-item">
+                    <i class="fa-solid fa-bolt"></i>
+                    <h3>إلغاء المعاملات الورقية</h3>
+                    <p>أتمتة دورة حياة الاجتماع بالكامل من الدعوة وحتى الاعتماد والتوقيع النهائي.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- الشريحة 3: محرك الجدولة التكرارية -->
+    <div class="slide-container">
+        <div class="slide-header">
+            <div class="slide-title"><i class="fa-solid fa-calendar-days"></i> الجدولة المتقدمة والأنماط الدورية</div>
+            <div class="slide-number">3 / 8</div>
+        </div>
+        <div class="slide-body">
+            <ul class="bullet-list">
+                <li>
+                    <i class="fa-solid fa-gears" style="color:var(--accent-blue)"></i>
+                    <strong>الاعتماد على محرك DBMS_SCHEDULER:</strong> لاستخراج ومعالجة أنماط التكرار الزمنية المعقدة بأعلى مرونة.
+                </li>
+                <li>
+                    <i class="fa-solid fa-arrows-rotate" style="color:var(--accent-teal)"></i>
+                    <strong>دعم أنماط التكرار المتنوعة:</strong> اجتماعات لمرة واحدة، أو دورية (يومية، أسبوعية، شهرياً، سنوياً).
+                </li>
+                <li>
+                    <i class="fa-solid fa-stopwatch" style="color:var(--accent-blue)"></i>
+                    <strong>إدارة نهاية السلسلة:</strong> تحديد نهاية الاجتماعات إما بـ (عدد مرات التكرار) أو (تاريخ نهاية النمط).
+                </li>
+                <li>
+                    <i class="fa-solid fa-graduation-cap" style="color:var(--accent-teal)"></i>
+                    <strong>توافق أكاديمي:</strong> الدعم الكامل لدورة مجالس وهياكل الجامعة والمجالس الممتدة.
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- الشريحة 4: الدعوات والتعارضات والتقويم -->
+    <div class="slide-container">
+        <div class="slide-header">
+            <div class="slide-title"><i class="fa-solid fa-user-check"></i> الدعوات الشاملة والذكاء التشغيلي</div>
+            <div class="slide-number">4 / 8</div>
+        </div>
+        <div class="slide-body">
+            <div class="cards-grid-3">
+                <div class="card-item">
+                    <i class="fa-solid fa-users"></i>
+                    <h3>دعوات المجموعات</h3>
+                    <p>إمكانية دعوة مجموعة كاملة بضغطة زر واحدة أو إضافة أفراد بصفة شخصية.</p>
+                </div>
+                <div class="card-item">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    <h3>فحص التعارضات الآلي</h3>
+                    <p>التحقق الفوري من عدم انشغال القاعات أو تعارض أوقات الحضور والتنبيه مسبقاً.</p>
+                </div>
+                <div class="card-item">
+                    <i class="fa-solid fa-calendar-share"></i>
+                    <h3>مشاركة التقويم (Calendar)</h3>
+                    <p>مشاركة التقويم الشخصي مع الزملاء لمعرفة الأوقات المتاحة وتسهيل التنسيق.</p>
+                </div>
+            </div>
+            <div style="margin-top: 20px; background: rgba(56, 189, 248, 0.1); padding: 15px; border-radius: 8px; border-right: 3px solid var(--accent-blue); font-size: 14px;">
+                <strong>إدارة الردود:</strong> يتيح النظام للمدعو الرد بـ (موافق، اعتذار، أو اقتراح موعد جديد عبر شاشة مخصصة ترسل تنبيهاً للمنظم).
+            </div>
+        </div>
+    </div>
+
+    <!-- الشريحة 5: الأجندة التفاعلية -->
+    <div class="slide-container">
+        <div class="slide-header">
+            <div class="slide-title"><i class="fa-solid fa-list-ol"></i> الأجندة التشاركية وحوكمة الصلاحيات</div>
+            <div class="slide-number">5 / 8</div>
+        </div>
+        <div class="slide-body">
+            <div class="cards-grid">
+                <div class="card-item">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                    <h3>إضافة البنود التشاركية</h3>
+                    <p>السماح للمدعوين بالاطلاع على أجندة الاجتماع المقترح وإضافة بنود جديدة للمناقشة مسبقاً.</p>
+                </div>
+                <div class="card-item">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <h3>صلاحيات دقيقة على مستوى البند</h3>
+                    <p>لكل عضو صلاحية التعديل على البنود التي أضافها فقط، مع صلاحية تعديل شاملة للرئيس والمقرر.</p>
+                </div>
+                <div class="card-item">
+                    <i class="fa-solid fa-clipboard-check"></i>
+                    <h3>توثيق النقاش والمخرجات</h3>
+                    <p>تسجيل نتائج النقاش والتوصيات والقرارات لكل بند مستقلاً أثناء الجلسة.</p>
+                </div>
+                <div class="card-item">
+                    <i class="fa-solid fa-flag"></i>
+                    <h3>تحديد الأولويات والمواعيد</h3>
+                    <p>تصنيف المخرج (قرار/توصية)، درجة الأولوية (قصوى، عاجل، عادي)، وتاريخ التنفيذ (Dead Date).</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- الشريحة 6: إدارة الثوابت والتثبيت -->
+    <div class="slide-container">
+        <div class="slide-header">
+            <div class="slide-title"><i class="fa-solid fa-sliders"></i> إدارة الثوابت المرنة وسجلات الحضور</div>
+            <div class="slide-number">6 / 8</div>
+        </div>
+        <div class="slide-body">
+            <div class="cards-grid">
+                <div class="card-item">
+                    <i class="fa-solid fa-id-badge"></i>
+                    <h3>صفات الحضور بالجلسة</h3>
+                    <p>(رئيساً، مقرراً، عضواً) وبناءً عليها تُحدد الصلاحيات داخل الجلسة آلياً.</p>
+                </div>
+                <div class="card-item">
+                    <i class="fa-solid fa-user-clock"></i>
+                    <h3>حالات الحضور الدقيقة</h3>
+                    <p>تسجيل حالة الحضور بالماجريات: (حاضر، غائب، غائب بعذر، حضور متأخر).</p>
+                </div>
+                <div class="card-item">
+                    <i class="fa-solid fa-envelope-open-text"></i>
+                    <h3>أنواع الدعوة للحدث</h3>
+                    <p>تصنيف الدعوات الموجهة للأعضاء أو الضيوف بـ (إلزامي، اختياري).</p>
+                </div>
+                <div class="card-item">
+                    <i class="fa-solid fa-gavel"></i>
+                    <h3>أنواع المخرجات والقرارات</h3>
+                    <p>إدارة ثوابت مخرجات الجلسات وتصنيفها المعتمد (قرار تنفيذي، توصية).</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- الشريحة 7: محرك البحث الأرشيفي -->
+    <div class="slide-container">
+        <div class="slide-header">
+            <div class="slide-title"><i class="fa-solid fa-magnifying-glass"></i> محرك البحث المتقدم والأرشيف الذكي</div>
+            <div class="slide-number">7 / 8</div>
+        </div>
+        <div class="slide-body">
+            <ul class="bullet-list">
+                <li>
+                    <i class="fa-solid fa-font" style="color:var(--accent-teal)"></i>
+                    <strong>بحث متعدد المحاور:</strong> البحث الشامل في المحاضر السابقة عبر (عنوان الاجتماع، البنود، النقاشات، أو القرارات والتوصيات).
+                </li>
+                <li>
+                    <i class="fa-solid fa-layer-group" style="color:var(--accent-blue)"></i>
+                    <strong>مرونة الاستعلام:</strong> البحث من خلال بند أو أكثر  من البنود السابقة (عنوان الاجتماع، البنود، النقاشات أو القرارات والتوصيات).
+                </li>
+                <li>
+                    <i class="fa-solid fa-arrow-pointer" style="color:var(--accent-teal)"></i>
+                    <strong>الانتقال المباشر:</strong> الانتقال الفوري بنقرة زر من نتائج البحث إلى شاشة جلسة الاجتماع المعنية بكافة تفاصيلها.
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- الشريحة 8: الخاتمة -->
+    <div class="slide-container cover-slide">
+        <i class="fa-solid fa-circle-check" style="font-size: 60px; color: var(--accent-teal);"></i>
+        <h1>شكراً لكم</h1>
+        <h2>نظام إدارة وحوكمة الاجتماعات والمجالس - رؤية رقمية متكاملة</h2>
+        <p style="color: var(--text-muted); margin-top: 15px;">جاهز لاستقبال أسئلتكم واستفساراتكم الفنية والتشغيلية</p>
+    </div>
+
+    <!-- أزرار التحكم -->
+    <div class="controls">
+        <button class="btn-nav" id="prevBtn" onclick="changeSlide(-1)"><i class="fa-solid fa-arrow-right"></i> السابق</button>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <button class="btn-nav" id="nextBtn" onclick="changeSlide(1)">التالي <i class="fa-solid fa-arrow-left"></i></button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide-container');
+        const progressFill = document.getElementById('progressFill');
+
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                slide.classList.remove('active');
+                if (i === index) {
+                    slide.classList.add('active');
+                }
+            });
+            const progressPercent = ((index + 1) / slides.length) * 100;
+            progressFill.style.width = `${progressPercent}%`;
+        }
+
+        function changeSlide(direction) {
+            currentSlide += direction;
+            if (currentSlide < 0) currentSlide = 0;
+            if (currentSlide >= slides.length) currentSlide = slides.length - 1;
+            showSlide(currentSlide);
+        }
+
+        // دعم التنقل عبر أسهم الكيبورد
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') changeSlide(1); // للغة العربية التالي هو اليسار
+            if (e.key === 'ArrowRight') changeSlide(-1);
+        });
+    </script>
+</body>
+</html>
