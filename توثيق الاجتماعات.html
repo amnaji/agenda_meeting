@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>التقرير الشامل لنظام إدارة الاجتماعات واللجان - Oracle APEX</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #0f172a;
+            --secondary-color: #1e3a8a;
+            --accent-color: #0d9488;
+            --bg-light: #f8fafc;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #f1f5f9;
+            color: var(--text-dark);
+            line-height: 1.8;
+            padding: 40px 20px;
+        }
+
+        .document-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 60px 80px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-color);
+        }
+
+        header.report-header {
+            text-align: center;
+            border-bottom: 3px solid var(--secondary-color);
+            padding-bottom: 30px;
+            margin-bottom: 40px;
+        }
+
+        .report-header h1 {
+            font-size: 32px;
+            color: var(--primary-color);
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .report-header .subtitle {
+            font-size: 18px;
+            color: var(--accent-color);
+            font-weight: 500;
+        }
+
+        .meta-info {
+            display: flex;
+            justify-content: space-around;
+            background: var(--bg-light);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 25px;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .toc {
+            background-color: #eff6ff;
+            border-right: 4px solid var(--secondary-color);
+            padding: 25px 30px;
+            border-radius: 6px;
+            margin-bottom: 40px;
+        }
+
+        .toc h3 {
+            color: var(--secondary-color);
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .toc ul {
+            list-style: none;
+        }
+
+        .toc li {
+            margin-bottom: 10px;
+        }
+
+        .toc a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .toc a:hover {
+            color: var(--accent-color);
+        }
+
+        section {
+            margin-bottom: 45px;
+        }
+
+        h2.section-title {
+            font-size: 24px;
+            color: var(--secondary-color);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h3.subsection-title {
+            font-size: 19px;
+            color: var(--primary-color);
+            margin: 20px 0 12px 0;
+        }
+
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+            font-size: 16px;
+        }
+
+        ul, ol {
+            margin-right: 25px;
+            margin-bottom: 15px;
+        }
+
+        li {
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .feature-card {
+            background: var(--bg-light);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            transition: transform 0.2s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--accent-color);
+        }
+
+        .feature-card i {
+            font-size: 28px;
+            color: var(--accent-color);
+            margin-bottom: 12px;
+        }
+
+        .feature-card h4 {
+            font-size: 18px;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+        }
+
+        .feature-card p {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            font-size: 15px;
+        }
+
+        table th, table td {
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            text-align: right;
+        }
+
+        table th {
+            background-color: var(--secondary-color);
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        table tr:nth-child(even) {
+            background-color: var(--bg-light);
+        }
+
+        .code-block {
+            background: #1e293b;
+            color: #f8fafc;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            direction: ltr;
+            text-align: left;
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+
+        .callout-box {
+            background: #f0fdf4;
+            border-right: 4px solid #16a34a;
+            padding: 20px;
+            border-radius: 6px;
+            margin: 25px 0;
+        }
+
+        .callout-box h4 {
+            color: #15803d;
+            margin-bottom: 8px;
+        }
+
+        footer.report-footer {
+            text-align: center;
+            border-top: 1px solid var(--border-color);
+            padding-top: 20px;
+            margin-top: 60px;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="document-container">
+    <header class="report-header">
+        <h1>تقرير المشروع: نظام إدارة الاجتماعات واللجان الإلكتروني</h1>
+        <div class="subtitle">حل تقني متكامل يعتمد على بيئة تطوير Oracle Application Express (APEX)</div>
+        <div class="meta-info">
+            <span><i class="fa-regular fa-building"></i> الجامعة الإسلامية - عمادة التحول الرقمي </span>
+            <span><i class="fa-regular fa-calendar"></i> التاريخ: سبتمبر 2026</span>
+            <span><i class="fa-solid fa-code"></i> البيئة: Oracle APEX 19.2 / Database 11g</span>
+        </div>
+    </header>
+
+    <!-- الفهرس -->
+    <nav class="toc">
+        <h3><i class="fa-solid fa-list-ul"></i> محتويات التقرير</h3>
+        <ul>
+            <li><a href="#sec1">1. الملخص (Summary)</a></li>
+            <li><a href="#sec2">2. الرؤية والأهداف الاستراتيجية للمشروع</a></li>
+            <li><a href="#sec3">3. المعمارية الهندسية والتقنية (Architecture & Stack)</a></li>
+            <li><a href="#sec4">4. الوظائف والمميزات الأساسية للنظام</a></li>
+            <li><a href="#sec5">5. تصميم نموذج قاعدة البيانات (Database Data Model)</a></li>
+            <li><a href="#sec6">6. مصفوفة الصلاحيات والحماية (Security & Access Control)</a></li>
+            <li><a href="#sec7">7. خطة التنفيذ والمراحل (Implementation Roadmap)</a></li>
+            <li><a href="#sec8">8. العائد على الاستثمار ومؤشرات قياس الأداء (ROI & KPIs)</a></li>
+        </ul>
+    </nav>
+
+    <!-- 1. الملخص التنفيذي -->
+    <section id="sec1">
+        <h2 class="section-title"><i class="fa-solid fa-chart-line"></i> 1. الملخص (Summary)</h2>
+        <p>
+            يهدف هذا المشروع  <strong>"نظام إدارة الاجتماعات واللجان الإلكتروني"</strong> المطور باستخدام بيئة <strong>Oracle Application Express (APEX)</strong>. لتلبية الحاجة الماسة إلى أتمتة كافة مراحل الاجتماعات المؤسسية <strong>  ضمن استراتيجية التحول الرقمي </strong> (بدءاً من إرسال الدعوات وتأكيد الحضور، مروراً بإدارة أجندة الفعاليات وصياغة محاضر الاجتماعات، وانتهاءً بمتابعة التوصيات والقرارات الصادرة).
+        </p>
+        <p>
+            من خلال الاعتماد على قواعد بيانات أوراكل المتطورة وبيئة APEX منخفضة الترميز (Low-Code)، يوفر النظام بيئة عمل آمنة، سريعة، وعالية المرونة تضمن رفع كفاءة الاجتماعات بنسبة عالية، وتخفيض التكاليف التشغيلية والأوراق بنسبة ممتازة.
+        </p>
+    </section>
+
+    <!-- 2. الأهداف الاستراتيجية -->
+    <section id="sec2">
+        <h2 class="section-title"><i class="fa-solid fa-bullseye"></i> 2. الرؤية والأهداف الاستراتيجية</h2>
+        <p>تتمحور أهداف إطلاق هذا النظام حول أربعة محاور رئيسية:</p>
+        <ul>
+            <li><strong>التحول الرقمي الكامل:</strong> التخلص الشامل من المعاملات الورقية وإدارة كافة وثائق ومحاضر الاجتماعات إلكترونياً.</li>
+            <li><strong>حوكمة القرارات والتوصيات:</strong> الربط الآلي بين القرارات الصادرة في الاجتماعات والموظفين المكلّفين بالتنفيذ.</li>
+            <li><strong>تعزيز الشفافية والمساءلة:</strong> توثيق دقيق لكافة سجلات التدقيق (Audit Logs) والحضور لضمان الامتثال للمعايير التنظيمية.</li>
+            <li><strong>توفير الوقت والجهد:</strong> أتمتة إرسال التنبيهات والدعوات، وإنشاء التقارير والمحاضر بنقرة زر واحدة عبر تقنيات APEX التقارير التفاعلية (Interactive Reports).</li>
+        </ul>
+    </section>
+
+    <!-- 3. المعمارية الهندسية -->
+    <section id="sec3">
+        <h2 class="section-title"><i class="fa-solid fa-sitemap"></i> 3. المعمارية الهندسية والتقنية</h2>
+        <p>
+            يعتمد النظام على المعمارية ثلاثية الطبقات (Three-Tier Architecture) المعتمدة في بيئة Oracle APEX، والتي تضمن أداءً فائقاً وأماناً مشدداً:
+        </p>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <i class="fa-solid fa-desktop"></i>
+                <h4>طبقة العرض (Client Tier)</h4>
+                <p>واجهات مستخدم متجاوبة تماماً وتعمل بسلاسة على كافة الأجهزة الذكية واللوحية.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fa-solid fa-network-wired"></i>
+                <h4>طبقة خادم التطبيقات (Web Tier)</h4>
+                <p>استخدام Oracle REST Data Services (ORDS) مع خادم WebLogic/Tomcat للتعامل مع طلبات HTTP/HTTPS وتحويلها بسلاسة لقاعدة البيانات.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fa-solid fa-database"></i>
+                <h4>طبقة قاعدة البيانات (Data Tier)</h4>
+                <p>قاعدة بيانات Oracle Database حيث يتم تنفيذ منطق العمل (Business Logic) عبر PL/SQL والأوامر المباشرة داخل محرك APEX.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. الوظائف الأساسية -->
+    <section id="sec4">
+        <h2 class="section-title"><i class="fa-solid fa-cogs"></i> 4. الوظائف والمميزات الأساسية للنظام</h2>
+        <p>يحتوي النظام على حزمة متكاملة من الوحدات البرمجية التي تغطي الدورة الحياتية الكاملة للاجتماع:</p>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <i class="fa-regular fa-calendar-check"></i>
+                <h4>التخطيط والجدولة الذكية</h4>
+                <p>حجز القاعات، التحقق من عدم تعارض المواعيد سواء للقاعات أو المدعوين وإرسال الدعوات عبر البريد الإلكتروني</p>
+            </div>
+            <div class="feature-card">
+                <i class="fa-solid fa-list-check"></i>
+                <h4>إدارة بنود الأجندة</h4>
+                <p>إتاحة المجال للجميع للاطلاع على أجندة الاجتماع، مع منحهم صلاحية إضافة بنود وإعطاء كل عضو صلاحية التعديل والحذف على البنود الخاصة به فقط</p>
+            </div>
+            <div class="feature-card">
+                <i class="fa-solid fa-pen-fancy"></i>
+                <h4>صياغة وتجهيز المحاضر</h4>
+                <p>تحرير المحضر فورياً خلال الاجتماع، وتحديد بنود التكليفات ونوع التكليف ودرجة الأولوية والتاريخ النهائي للتنفيذ</p>
+            </div>
+            <div class="feature-card">
+                <i class="fa-solid fa-tasks"></i>
+                <h4>متابعة القرارات والمهام</h4>
+                <p>تحويل التوصيات إلى مهام قابلة للمتابعة، مع إرسال تذكيرات آلية ولوحة تحكم (Dashboard) لنسب الإنجاز.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. نموذج قاعدة البيانات -->
+    
+    <!-- 6. مصفوفة الصلاحيات -->
+    <section id="sec6">
+        <h2 class="section-title"><i class="fa-solid fa-user-shield"></i> 5. مصفوفة الصلاحيات والحماية</h2>
+        <p>تم تطبيق نموذج الحماية المبني على الأدوار (Role-Based Access Control - RBAC) لضمان السرية التامة:</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>الدور الوظيفي</th>
+                    <th>إعداد الجدول والجدولة</th>
+                    <th>إدارة الاجتماع والمحضر</th>
+                    <th>الموافقة والتوقيع</th>
+                    <th>عرض التقارير واللوحات</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>أمين السر / مقرر الاجتماع</td>
+                    <td><i class="fa-solid fa-check" style="color:green;"></i> كامل الصلاحيات</td>
+                    <td><i class="fa-solid fa-check" style="color:green;"></i> كامل الصلاحيات</td>
+                    <td><i class="fa-solid fa-xmark" style="color:red;"></i> إعداد فقط</td>
+                    <td><i class="fa-solid fa-check" style="color:green;"></i> نعم</td>
+                </tr>
+                <tr>
+                    <td>رئيس اللجنة / الاجتماع</td>
+                    <td><i class="fa-solid fa-check" style="color:green;"></i> اعتماد الجدولة</td>
+                    <td><i class="fa-solid fa-check" style="color:green;"></i> إدارة ومراجعة</td>
+                    <td><i class="fa-solid fa-check" style="color:green;"></i> اعتماد نهائي</td>
+                    <td><i class="fa-solid fa-check" style="color:green;"></i> نعم</td>
+                </tr>
+                <tr>
+                    <td>أعضاء اللجنة / المشاركون</td>
+                    <td><i class="fa-solid fa-eye" style="color:blue;"></i> تحكم كامل في بنوده  <br> استعراض البنود الأخرى</td>
+                    <td><i class="fa-solid fa-comments" style="color:blue;"></i> مشاركة وتصويت</td>
+                    <td><i class="fa-solid fa-check" style="color:green;"></i> توقيع بالحضور</td>
+                    <td><i class="fa-solid fa-check" style="color:green;"></i> تقارير شخصية</td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </section>
+
+    <!-- 7. خطة التنفيذ -->
+    <section id="sec7">
+        <h2 class="section-title"><i class="fa-solid fa-timeline"></i> 6. خطة التنفيذ والمراحل الزمنية</h2>
+        <p>يتوزع النطاق الزمني لتنفيذ وتشغيل المشروع على 4 مراحل رئيسية ممتدة عبر 12 أسبوعاً:</p>
+
+        <div class="callout-box">
+            <h4>خارطة الطريق التشغيلية:</h4>
+            <ol>
+                <li><strong>المرحلة الأولى (الأسابيع 1-3):</strong> تشغيل النظام على مستوى عمادة التحول الرقمي وتكنولوجيا المعلومات.</li>
+                <li><strong>المرحلة الثانية (الأسابيع 4-7):</strong> تشغيل النظام لبعض اللجان العاملة والفعالة في الجامعة.</li>
+                <li><strong>المرحلة الثالثة (الأسابيع 8-10):</strong> تعميم النظام على مستوى الجامعة.</li>
+                <li><strong>المرحلة الرابعة (الأسابيع 11-12):</strong> اعتماد النظام (Go-Live).</li>
+            </ol>
+        </div>
+    </section>
+
+    <!-- 8. العائد ومؤشرات الأداء -->
+    <section id="sec8">
+        <h2 class="section-title"><i class="fa-solid fa-chart-pie"></i> 7. العائد على الاستثمار ومؤشرات الأداء (KPIs)</h2>
+        <p>يضمن تطبيق نظام إدارة الاجتماعات عبر Oracle APEX تحقيق القيمة الإستراتيجية والتشغيلية التالية:</p>
+        <ul>
+            <li><strong>تقليل زمن إعداد محاضر الاجتماعات:</strong> انخفاض الوقت المستغرق وتسهيل الوصول للموظفين.</li>
+            <li><strong>نسبة الالتزام بتنفيذ التوصيات:</strong> تحسين نسبة الالتزام بتنفيذ القرارات والتوصيات، حيث يسهل على الجهات العليا متابعة الالتزام.</li>
+            <li><strong>كفاءة التكلفة:</strong> الاستغناء  التام أو شبه الكامل عن طباعة الورق حيث يمكن لجميع من لهم صلاحية الاطلاع على المحضر الوصول له من خلال النظام.</li>
+			<li><strong>أرشفة مركزية:</strong> ضمان حفظ محاضر الاجتماعات بمستوى عالي من الوثوقية حيث ينطبق عليها ما ينطبق على بيانات الجامعة من حيث النسخ الاحتياطي في ظل الظروف المتقلبة.</li>
+        </ul>
+    </section>
+
+    <footer class="report-footer">
+        <p>© 2026 جميع الحقوق محفوظة - عمادة التحول الرقمي وتكنولوجيا المعلومات</p>
+    </footer>
+</div>
+
+</body>
+</html>
